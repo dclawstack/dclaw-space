@@ -1,0 +1,5 @@
+apiVersion: v2
+name: dclaw-space
+description: Helm chart for DClaw Space
+version: 1.0.0
+appVersion: "1.0.0"
