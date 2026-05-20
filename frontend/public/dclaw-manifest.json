@@ -1,0 +1,21 @@
+{
+  "name": "DClaw Space",
+  "slug": "dclaw-space",
+  "version": "1.0.0",
+  "description": "AI-native workspace optimization — desk booking, room scheduling, and floor plan management",
+  "entry": "/",
+  "icon": "/favicon.ico",
+  "color": "#7660A8",
+  "panels": [
+    { "id": "dashboard", "label": "Dashboard", "path": "/" },
+    { "id": "desks", "label": "Desks", "path": "/desks" },
+    { "id": "rooms", "label": "Rooms", "path": "/rooms" },
+    { "id": "bookings", "label": "My Bookings", "path": "/bookings" },
+    { "id": "floors", "label": "Floor Plans", "path": "/floors" }
+  ],
+  "api": {
+    "base": "/api/v1",
+    "health": "/health/"
+  },
+  "capabilities": ["desk-booking", "room-booking", "floor-plan", "analytics"]
+}
