@@ -1,7 +1,11 @@
-# DClaw Scaffold
+# DClaw Space
 
-> **The single source of truth for new DClaw app development.**
-> Clone this repo, rename it, fill in your `PRODUCT-SPEC.md`, and hand it to your coding agents.
+> **AI-native workspace optimization — desk booking, room scheduling, and floor plan management.**
+> Developed by [@sureshOC](https://github.com/sureshOC).
+
+---
+
+> **Scaffold note:** This repo is built on the DClaw scaffold. The single source of truth for new DClaw app development — clone, rename, fill in your `PRODUCT-SPEC.md`, and hand it to your coding agents.
 
 ## What This Is
 
