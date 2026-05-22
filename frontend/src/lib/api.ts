@@ -33,6 +33,10 @@ async function fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
     const err = await res.text();
     throw new ApiError(`API error ${res.status}: ${err}`, res.status);
   }
+  const contentType = res.headers.get("content-type") ?? "";
+  if (res.status === 204 || !contentType.includes("json")) {
+    return undefined as T;
+  }
   return res.json();
 }
 
