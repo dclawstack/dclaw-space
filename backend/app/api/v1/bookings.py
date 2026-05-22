@@ -1,6 +1,7 @@
 import uuid
-from datetime import date
+from datetime import date, datetime, timezone
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -163,7 +164,7 @@ async def cancel_room_booking(
     await repo.cancel(booking)
 
 
-# ── Analytics helper (Complexity 1) ───────────────────────────────────────────
+# ── Analytics helper ──────────────────────────────────────────────────────────
 
 @router.get("/analytics/utilization")
 async def desk_utilization(
@@ -171,9 +172,66 @@ async def desk_utilization(
     date_to: date = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
-    """Daily desk booking counts for the given date range."""
     if date_to < date_from:
         raise HTTPException(status_code=422, detail="date_to must be >= date_from")
     repo = DeskBookingRepository(db)
     data = await repo.utilization_by_date(date_from, date_to)
     return {"date_from": str(date_from), "date_to": str(date_to), "data": data}
+
+
+# ── iCal export ───────────────────────────────────────────────────────────────
+
+@router.get("/export.ics")
+async def export_ical(
+    user_id: str = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export all upcoming bookings as an iCalendar feed."""
+    from icalendar import Calendar, Event as ICalEvent
+    from app.models.desk import Desk
+    from sqlalchemy import select
+
+    desk_repo = DeskBookingRepository(db)
+    room_repo = RoomBookingRepository(db)
+
+    desk_bookings = await desk_repo.get_by_user(user_id, upcoming_only=True)
+    room_bookings = await room_repo.get_by_user(user_id, upcoming_only=True)
+
+    # Fetch desk labels
+    if desk_bookings:
+        desk_ids = [b.desk_id for b in desk_bookings]
+        result = await db.execute(select(Desk).where(Desk.id.in_(desk_ids)))
+        desk_map = {d.id: d for d in result.scalars().all()}
+    else:
+        desk_map = {}
+
+    cal = Calendar()
+    cal.add("prodid", "-//DClaw Space//dclaw.space//EN")
+    cal.add("version", "2.0")
+    cal.add("x-wr-calname", f"DClaw Space — {user_id}")
+
+    for b in desk_bookings:
+        ev = ICalEvent()
+        desk = desk_map.get(b.desk_id)
+        label = desk.label if desk else str(b.desk_id)[:8]
+        ev.add("summary", f"Desk: {label}")
+        ev.add("dtstart", b.date)
+        ev.add("dtend", b.date)
+        ev.add("uid", f"desk-{b.id}@dclaw.space")
+        ev.add("description", f"Status: {b.status.value}")
+        cal.add_component(ev)
+
+    for b in room_bookings:
+        ev = ICalEvent()
+        ev.add("summary", b.title)
+        ev.add("dtstart", b.start_dt.replace(tzinfo=timezone.utc))
+        ev.add("dtend", b.end_dt.replace(tzinfo=timezone.utc))
+        ev.add("uid", f"room-{b.id}@dclaw.space")
+        ev.add("description", f"Attendees: {b.attendee_count} | Status: {b.status.value}")
+        cal.add_component(ev)
+
+    return Response(
+        content=cal.to_ical(),
+        media_type="text/calendar",
+        headers={"Content-Disposition": f'attachment; filename="dclaw-{user_id}.ics"'},
+    )

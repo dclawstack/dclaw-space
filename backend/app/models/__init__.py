@@ -5,5 +5,11 @@ from app.models.desk import Desk  # noqa: F401
 from app.models.room import Room  # noqa: F401
 from app.models.desk_booking import DeskBooking, BookingStatus  # noqa: F401
 from app.models.room_booking import RoomBooking  # noqa: F401
+from app.models.visitor import Visitor, VisitorStatus  # noqa: F401
+from app.models.user_preference import UserPreference  # noqa: F401
 
-__all__ = ["Base", "Floor", "Desk", "Room", "DeskBooking", "RoomBooking", "BookingStatus"]
+__all__ = [
+    "Base", "Floor", "Desk", "Room",
+    "DeskBooking", "RoomBooking", "BookingStatus",
+    "Visitor", "VisitorStatus", "UserPreference",
+]

@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import settings
 from app.models.base import Base
 
@@ -7,6 +7,8 @@ engine = create_async_engine(
     echo=settings.app_env == "dev",
     pool_pre_ping=True,
 )
+
+AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 async def get_db() -> AsyncSession:

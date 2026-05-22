@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import Link from "next/link"
+import CopilotPanel from "@/components/CopilotPanel"
 import "./globals.css"
 
 const poppins = Poppins({
@@ -20,6 +21,8 @@ const navLinks = [
   { href: "/rooms", label: "Rooms" },
   { href: "/bookings", label: "My Bookings" },
   { href: "/floors", label: "Floor Plans" },
+  { href: "/visitors", label: "Visitors" },
+  { href: "/analytics", label: "Analytics" },
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,8 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <aside className="w-56 shrink-0 border-r border-[#EBEBF0] bg-white flex flex-col">
             <div className="px-5 py-5 border-b border-[#EBEBF0]">
               <span className="text-lg font-semibold text-[#7660A8]">DClaw Space</span>
+              <p className="text-[10px] text-[#8888A0] mt-0.5">Workspace OS</p>
             </div>
-            <nav className="flex-1 py-4 px-3 space-y-1">
+            <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -43,11 +47,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Link>
               ))}
             </nav>
+            <div className="px-4 py-4 border-t border-[#EBEBF0]">
+              <p className="text-[10px] text-[#8888A0]">User: sureshOC</p>
+            </div>
           </aside>
 
           {/* Main content */}
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
+
+        {/* AI Copilot — always visible */}
+        <CopilotPanel />
       </body>
     </html>
   )
