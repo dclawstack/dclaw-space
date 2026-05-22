@@ -5,7 +5,8 @@ const nextConfig = {
   output: 'standalone',
   async rewrites() {
     return [
-      { source: "/api/:path*", destination: `${BACKEND_URL}/api/:path*` },
+      { source: "/api/:path*",    destination: `${BACKEND_URL}/api/:path*` },
+      { source: "/auth/:path*",   destination: `${BACKEND_URL}/auth/:path*` },
       { source: "/health/:path*", destination: `${BACKEND_URL}/health/:path*` },
     ];
   },
