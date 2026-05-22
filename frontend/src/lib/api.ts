@@ -11,11 +11,25 @@ export class ApiError extends Error {
 async function fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}${path}`;
   const { headers: extraHeaders, ...restOptions } = options ?? {};
+
+  // Auto-inject auth token if present (client-side only)
+  const token = typeof window !== "undefined" ? localStorage.getItem("dclaw_token") : null;
+  const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
   const res = await fetch(url, {
-    headers: { "Content-Type": "application/json", ...(extraHeaders as Record<string, string>) },
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader,
+      ...(extraHeaders as Record<string, string>),
+    },
     ...restOptions,
   });
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("dclaw_token");
+      window.location.href = "/login";
+      throw new Error("Session expired");
+    }
     const err = await res.text();
     throw new ApiError(`API error ${res.status}: ${err}`, res.status);
   }
@@ -210,8 +224,58 @@ export function getEsgMetrics(dateFrom: string, dateTo: string) {
   return fetchJson<EsgMetrics>(`/api/v1/analytics/esg?date_from=${dateFrom}&date_to=${dateTo}`);
 }
 
+// ── Admin CRUD ─────────────────────────────────────────────────────────────────
+export function updateFloor(id: string, body: Partial<{name: string; level: number; is_active: boolean}>) {
+  return fetchJson<Floor>(`/api/v1/floors/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+}
+export function deleteFloor(id: string) {
+  return fetchJson<void>(`/api/v1/floors/${id}`, { method: "DELETE" });
+}
+export function createDesk(body: {floor_id: string; label: string; zone?: string; x?: number; y?: number}) {
+  return fetchJson<Desk>("/api/v1/desks/", { method: "POST", body: JSON.stringify(body) });
+}
+export function updateDesk(id: string, body: Partial<{label: string; zone: string; x: number; y: number; is_active: boolean}>) {
+  return fetchJson<Desk>(`/api/v1/desks/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+}
+export function deleteDesk(id: string) {
+  return fetchJson<void>(`/api/v1/desks/${id}`, { method: "DELETE" });
+}
+export function createRoom(body: {floor_id: string; name: string; capacity: number; x?: number; y?: number}) {
+  return fetchJson<Room>("/api/v1/rooms/", { method: "POST", body: JSON.stringify(body) });
+}
+export function updateRoom(id: string, body: Partial<{name: string; capacity: number; is_active: boolean}>) {
+  return fetchJson<Room>(`/api/v1/rooms/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+}
+export function deleteRoom(id: string) {
+  return fetchJson<void>(`/api/v1/rooms/${id}`, { method: "DELETE" });
+}
+
 // ── iCal export ────────────────────────────────────────────────────────────────
 export function icalExportUrl(userId?: string) {
   const base = process.env.NEXT_PUBLIC_API_URL || "";
   return `${base}/api/v1/bookings/export.ics${userId ? `?x_user_id=${userId}` : ""}`;
+}
+
+// ── Auth ───────────────────────────────────────────────────────────────────────
+export interface AuthUser {
+  id: string; org_id: string; email: string;
+  first_name: string; last_name: string; role: string; is_active: boolean;
+}
+
+export function register(body: { org_name: string; first_name: string; last_name: string; email: string; password: string }) {
+  return fetchJson<{ access_token: string; token_type: string }>("/auth/register", {
+    method: "POST", body: JSON.stringify(body),
+  });
+}
+
+export function login(body: { email: string; password: string }) {
+  return fetchJson<{ access_token: string; token_type: string }>("/auth/login", {
+    method: "POST", body: JSON.stringify(body),
+  });
+}
+
+export function getMe(token: string) {
+  return fetchJson<AuthUser>("/auth/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

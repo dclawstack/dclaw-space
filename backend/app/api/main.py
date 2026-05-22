@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import init_db, AsyncSessionLocal
 from app.api.routes import health
-from app.api.v1 import floors, desks, rooms, bookings, visitors, analytics, copilot
+from app.api.v1 import floors, desks, rooms, bookings, visitors, analytics, copilot, auth, org
 from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
@@ -40,3 +40,5 @@ app.include_router(bookings.router, prefix="/api/v1/bookings", tags=["bookings"]
 app.include_router(visitors.router, prefix="/api/v1/visitors", tags=["visitors"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 app.include_router(copilot.router, prefix="/api/v1/copilot", tags=["copilot"])
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(org.router, prefix="/api/v1/org", tags=["org"])

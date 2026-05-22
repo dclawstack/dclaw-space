@@ -73,6 +73,17 @@ async def update_desk(
     return await repo.update(desk, body.model_dump(exclude_none=True))
 
 
+@router.patch("/{desk_id}", response_model=DeskOut)
+async def patch_desk(
+    desk_id: uuid.UUID, body: DeskUpdate, db: AsyncSession = Depends(get_db)
+):
+    repo = DeskRepository(db)
+    desk = await repo.get_by_id(desk_id)
+    if not desk:
+        raise HTTPException(status_code=404, detail="Desk not found")
+    return await repo.update(desk, body.model_dump(exclude_unset=True))
+
+
 @router.delete("/{desk_id}", status_code=204)
 async def delete_desk(desk_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     repo = DeskRepository(db)

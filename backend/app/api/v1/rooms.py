@@ -79,6 +79,17 @@ async def update_room(
     return await repo.update(room, body.model_dump(exclude_none=True))
 
 
+@router.patch("/{room_id}", response_model=RoomOut)
+async def patch_room(
+    room_id: uuid.UUID, body: RoomUpdate, db: AsyncSession = Depends(get_db)
+):
+    repo = RoomRepository(db)
+    room = await repo.get_by_id(room_id)
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+    return await repo.update(room, body.model_dump(exclude_unset=True))
+
+
 @router.delete("/{room_id}", status_code=204)
 async def delete_room(room_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     repo = RoomRepository(db)

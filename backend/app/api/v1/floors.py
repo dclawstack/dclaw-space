@@ -54,6 +54,17 @@ async def update_floor(
     return await repo.update(floor, body.model_dump(exclude_none=True))
 
 
+@router.patch("/{floor_id}", response_model=FloorOut)
+async def patch_floor(
+    floor_id: uuid.UUID, body: FloorUpdate, db: AsyncSession = Depends(get_db)
+):
+    repo = FloorRepository(db)
+    floor = await repo.get_by_id(floor_id)
+    if not floor:
+        raise HTTPException(status_code=404, detail="Floor not found")
+    return await repo.update(floor, body.model_dump(exclude_unset=True))
+
+
 @router.delete("/{floor_id}", status_code=204)
 async def delete_floor(floor_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     repo = FloorRepository(db)

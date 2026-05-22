@@ -9,7 +9,8 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/dclaw_app"
 
-    secret_key: str = "change-me-in-production"
+    secret_key: str = "dev-secret-change-in-prod"
+    algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
 
     class Config:
