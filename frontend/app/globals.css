@@ -1,8 +1,0 @@
-/* DKube light mode — mirrors src/app/globals.css tokens */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #F8F8FA;  /* --dk-gray-50 */
-  color: #404049;        /* --dk-gray-700 */
-  -webkit-font-smoothing: antialiased;
-}
