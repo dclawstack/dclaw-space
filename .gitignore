@@ -15,3 +15,5 @@ graphify-out/
 # Local prompt/scratch files
 promt-*.log
 colors_and_type.css
+
+testsprite_tests/tmp/

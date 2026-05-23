@@ -1,0 +1,942 @@
+[
+  {
+    "id": "TC001",
+    "title": "Returning user logs in and reaches the dashboard",
+    "description": "This verifies that a returning user can sign in and land on the dashboard with workspace summary content visible.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify workspace summary cards are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "New user completes workspace setup and reaches the dashboard",
+    "description": "This test verifies that a new user can register, complete onboarding, and arrive at the dashboard with workspace content visible.",
+    "category": "workspace setup",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the workspace creation form with valid new account details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "action",
+        "description": "Complete the onboarding flow with valid selections"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "New user creates a workspace account and reaches onboarding",
+    "description": "This verifies that a new user can register a workspace account and land in the onboarding flow with access to the app.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the workspace account details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the onboarding flow is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user can access the app after registration"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Returning employee logs in and sees their dashboard overview",
+    "description": "This test verifies that a returning employee can log in and see the dashboard overview with bookings and team presence information.",
+    "category": "workspace access",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify team presence and upcoming bookings are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "User books a desk from the desk browser",
+    "description": "This verifies that a logged-in employee can browse available desks and complete a desk booking from the desks page.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view desks"
+      },
+      {
+        "type": "action",
+        "description": "Select an available desk for a valid date"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the desk booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is created"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booked desk is visible in upcoming bookings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Employee books a desk from the desks page",
+    "description": "This test verifies that an employee can search for an available desk and create a booking that appears in their workspace.",
+    "category": "desk booking",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the desks navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid floor and date for available desks"
+      },
+      {
+        "type": "action",
+        "description": "Book an available desk"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is created"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new desk booking is visible in the bookings list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "User books a room from the room browser",
+    "description": "This verifies that a logged-in employee can browse available rooms and complete a room booking from the rooms page.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view rooms"
+      },
+      {
+        "type": "action",
+        "description": "Select an available room for a valid date and time"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the room booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is created"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booked room is visible in upcoming bookings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Employee books a room from the rooms page",
+    "description": "This test verifies that an employee can find an available meeting room and create a room booking successfully.",
+    "category": "room booking",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the rooms navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid date and time for an available room"
+      },
+      {
+        "type": "action",
+        "description": "Book an available room"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is created"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new room booking is visible in the bookings list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "User cancels an existing desk or room booking",
+    "description": "This verifies that a logged-in employee can cancel one of their bookings and see it removed from the active bookings list.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view bookings"
+      },
+      {
+        "type": "action",
+        "description": "Cancel one of the existing bookings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is removed from the active list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the bookings page still shows the remaining bookings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Employee checks in to a desk booking",
+    "description": "This test verifies that an employee can open their bookings and check in to a confirmed desk booking.",
+    "category": "bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Open a confirmed desk booking"
+      },
+      {
+        "type": "action",
+        "description": "Check in to the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is marked as checked in"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated booking status remains visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "User checks in to a confirmed booking",
+    "description": "This verifies that a logged-in employee can open their bookings and check in to an existing confirmed booking.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view bookings"
+      },
+      {
+        "type": "action",
+        "description": "Check in to a confirmed booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is marked as checked in"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated booking status is visible in the bookings list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Employee cancels a desk or room booking",
+    "description": "This test verifies that an employee can cancel one of their existing bookings from the bookings page and see it removed from active bookings.",
+    "category": "bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Open one of the current bookings"
+      },
+      {
+        "type": "action",
+        "description": "Cancel the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is removed from the active bookings list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cancellations update is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "User reviews dashboard overview content",
+    "description": "This verifies that a logged-in user can view the main dashboard summary, recent activity, and booking-related overview content.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the dashboard to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upcoming bookings or session summary content is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the team presence overview is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "User inspects floor availability and books a desk from the floor plan",
+    "description": "This verifies that a logged-in user can open a floor detail view, inspect desk availability, and book a desk directly from the floor plan.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view floors"
+      },
+      {
+        "type": "action",
+        "description": "Open a floor detail view"
+      },
+      {
+        "type": "action",
+        "description": "Select an available desk on the floor plan"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the desk booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the floor plan shows desk availability information"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new desk booking appears in My Bookings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Employee views a floor plan and books a desk from it",
+    "description": "This test verifies that an employee can inspect a floor occupancy view, select a desk, and see the booking reflected in My Bookings.",
+    "category": "floor plan",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the floors navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Open a floor details view"
+      },
+      {
+        "type": "action",
+        "description": "Select an available desk on the floor plan"
+      },
+      {
+        "type": "action",
+        "description": "Book the selected desk"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify floor occupancy information is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new booking is visible in My Bookings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "New user completes onboarding after registration",
+    "description": "This verifies that a newly registered user can finish onboarding and reach the dashboard afterward.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the workspace account details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "action",
+        "description": "Complete the onboarding steps with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Submit the onboarding flow"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is displayed after onboarding"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify onboarding is no longer shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Employee reviews team presence and upcoming bookings",
+    "description": "This test verifies that an employee can open presence information and review today’s team presence alongside upcoming bookings.",
+    "category": "presence",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the presence navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify team presence information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upcoming booking information is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "User joins a workspace with an invite code",
+    "description": "This verifies that a guest user can join a workspace using an invite code and reach the post-join workspace experience.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /join/a-valid-code"
+      },
+      {
+        "type": "action",
+        "description": "Complete the workspace join flow"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the workspace join confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user can continue into the workspace"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Admin manages workspace users, floors, desks, and rooms",
+    "description": "This test verifies that an admin can open the admin panel and access management controls for users, floors, desks, and rooms.",
+    "category": "admin management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the admin navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin panel is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user, floor, desk, and room management sections are visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Facilities manager reviews utilization analytics",
+    "description": "This test verifies that a facilities manager can open analytics and review workspace utilization insights.",
+    "category": "analytics",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the analytics navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the analytics dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify utilization insights are visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Employee exports bookings to iCal from the bookings page",
+    "description": "This test verifies that an employee can export their bookings to iCal from the bookings view.",
+    "category": "bookings export",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Start the bookings export to iCal"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the export action is available"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a bookings export confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "Facilities manager reviews ESG analytics",
+    "description": "This test verifies that a facilities manager can open ESG analytics and review sustainability insights.",
+    "category": "analytics",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the ESG analytics navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ESG analytics dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sustainability insights are visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "User sees a validation error when signing up with invalid details",
+    "description": "This verifies that registration blocks invalid input and shows validation feedback instead of creating an account.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid workspace account details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify registration validation errors are visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the account is not created"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC024",
+    "title": "User updates profile and settings",
+    "description": "This test verifies that a logged-in user can open settings and save profile changes successfully.",
+    "category": "settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the settings navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Update a profile setting with a valid value"
+      },
+      {
+        "type": "action",
+        "description": "Save the settings changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the settings update is saved"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated profile information is visible"
+      }
+    ],
+    "priority": "Low"
+  }
+]
