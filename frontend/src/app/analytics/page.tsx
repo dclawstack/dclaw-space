@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getDeskUtilization, getUtilizationSummary, getAttendancePredictions } from "@/lib/api"
+import { getDeskUtilization, getUtilizationSummary, getAttendancePredictions, analyticsCsvUrl } from "@/lib/api"
 import type { UtilizationDay, PredictionDay } from "@/lib/api"
 
 function nDaysAgo(n: number) {
@@ -51,9 +51,18 @@ export default function AnalyticsPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[#1A1A2E]">Analytics</h1>
-        <p className="text-sm text-[#8888A0] mt-1">Space utilization for the last 30 days</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-[#1A1A2E]">Analytics</h1>
+          <p className="text-sm text-[#8888A0] mt-1">Space utilization for the last 30 days</p>
+        </div>
+        <a
+          href={analyticsCsvUrl(nDaysAgo(30), today())}
+          download
+          className="px-4 py-2 rounded-full border border-[#EBEBF0] text-[#8888A0] text-xs hover:bg-[#F3F1F9] transition-colors shrink-0"
+        >
+          Export CSV
+        </a>
       </div>
 
       {loading ? <p className="text-sm text-[#8888A0]">Loading…</p> : (

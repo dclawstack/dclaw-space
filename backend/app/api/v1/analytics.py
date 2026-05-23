@@ -1,5 +1,8 @@
+import csv
+import io
 from datetime import date, timedelta
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
@@ -160,3 +163,51 @@ async def esg_metrics(
         "trees_equivalent": trees_equivalent,
         "note": "Estimates based on 0.8 kWh/desk-day and 0.233 kg CO2/kWh",
     }
+
+
+@router.get("/export/csv")
+async def export_csv(
+    date_from: date = Query(...),
+    date_to: date = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export desk bookings as CSV for the given date range."""
+    if date_to < date_from:
+        raise HTTPException(status_code=422, detail="date_to must be >= date_from")
+
+    result = await db.execute(
+        select(
+            DeskBooking.date,
+            DeskBooking.user_id,
+            DeskBooking.status,
+            DeskBooking.checked_in_at,
+            Desk.label.label("desk_label"),
+            Desk.zone,
+            Floor.name.label("floor_name"),
+        )
+        .join(Desk, DeskBooking.desk_id == Desk.id)
+        .join(Floor, Desk.floor_id == Floor.id)
+        .where(
+            DeskBooking.date >= date_from,
+            DeskBooking.date <= date_to,
+        )
+        .order_by(DeskBooking.date, Floor.name, Desk.label)
+    )
+    rows = result.all()
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["date", "floor", "desk", "zone", "user_id", "status", "checked_in_at"])
+    for r in rows:
+        writer.writerow([
+            r.date, r.floor_name, r.desk_label, r.zone or "",
+            r.user_id, r.status.value,
+            r.checked_in_at.isoformat() if r.checked_in_at else "",
+        ])
+
+    buf.seek(0)
+    return StreamingResponse(
+        iter([buf.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=dclaw-bookings-{date_from}-{date_to}.csv"},
+    )

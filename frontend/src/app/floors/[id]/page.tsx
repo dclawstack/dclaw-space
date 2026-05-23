@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useParams } from "next/navigation"
 import { getFloor, getFloorOccupancy, createDeskBooking } from "@/lib/api"
 import type { Floor, FloorOccupancy } from "@/lib/api"
@@ -25,17 +25,52 @@ export default function FloorPlanPage() {
   const [loading, setLoading] = useState(true)
   const [booking, setBooking] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [wsConnected, setWsConnected] = useState(false)
+  const wsRef = useRef<WebSocket | null>(null)
 
   useEffect(() => {
     getFloor(id).then(setFloor)
   }, [id])
 
+  // HTTP occupancy fetch for non-today dates
   useEffect(() => {
     if (!id || !date) return
-    setLoading(true)
-    getFloorOccupancy(id, date)
-      .then(setOccupancy)
-      .finally(() => setLoading(false))
+    if (date !== today()) {
+      setLoading(true)
+      getFloorOccupancy(id, date)
+        .then(setOccupancy)
+        .finally(() => setLoading(false))
+    }
+  }, [id, date])
+
+  // WebSocket for today's real-time occupancy
+  useEffect(() => {
+    if (!id || date !== today()) return
+    const proto = window.location.protocol === "https:" ? "wss" : "ws"
+    const host = window.location.host
+    const ws = new WebSocket(`${proto}://${host}/api/v1/floors/${id}/ws`)
+    wsRef.current = ws
+    ws.onopen = () => setWsConnected(true)
+    ws.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data)
+        // Map WS payload to FloorOccupancy shape
+        setOccupancy(prev => prev ? {
+          ...prev,
+          occupancy: Object.fromEntries(
+            Object.entries(data.occupancy as Record<string, { status: string }>).map(([k, v]) => [k, v.status])
+          )
+        } : prev)
+        setLoading(false)
+      } catch { /* ignore */ }
+    }
+    ws.onclose = () => setWsConnected(false)
+    ws.onerror = () => {
+      // Fallback to HTTP if WS fails
+      setLoading(true)
+      getFloorOccupancy(id, date).then(setOccupancy).finally(() => setLoading(false))
+    }
+    return () => ws.close()
   }, [id, date])
 
   async function handleBook(deskId: string) {
@@ -55,11 +90,21 @@ export default function FloorPlanPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[#1A1A2E]">
-          {floor ? floor.name : "Floor Plan"}
-        </h1>
-        {floor && <p className="text-sm text-[#8888A0] mt-1">Level {floor.level}</p>}
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-[#1A1A2E]">
+            {floor ? floor.name : "Floor Plan"}
+          </h1>
+          {floor && <p className="text-sm text-[#8888A0] mt-1">Level {floor.level}</p>}
+        </div>
+        {date === today() && (
+          <span className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium ${
+            wsConnected ? "bg-green-50 text-green-700" : "bg-[#F3F1F9] text-[#8888A0]"
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? "bg-green-500 animate-pulse" : "bg-[#D1D1DB]"}`} />
+            {wsConnected ? "Live" : "Connecting…"}
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-4 mb-6">

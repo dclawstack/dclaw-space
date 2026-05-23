@@ -260,6 +260,57 @@ export function icalExportUrl(userId?: string) {
   return `${base}/api/v1/bookings/export.ics${userId ? `?x_user_id=${userId}` : ""}`;
 }
 
+// ── QR Code ────────────────────────────────────────────────────────────────────
+export function deskBookingQrUrl(bookingId: string) {
+  return `/api/v1/bookings/desks/${bookingId}/qr`;
+}
+
+// ── Analytics CSV ──────────────────────────────────────────────────────────────
+export function analyticsCsvUrl(dateFrom: string, dateTo: string) {
+  return `/api/v1/analytics/export/csv?date_from=${dateFrom}&date_to=${dateTo}`;
+}
+
+// ── Presence ───────────────────────────────────────────────────────────────────
+export interface PresenceUser {
+  user_id: string; desk_label: string; zone: string | null;
+  floor_name: string; floor_id: string;
+}
+export interface PresenceData {
+  date: string; total_in_office: number; checked_in: number;
+  expected: number; users: PresenceUser[];
+}
+export function getPresenceToday(targetDate?: string, floorId?: string) {
+  const params = new URLSearchParams();
+  if (targetDate) params.set("target_date", targetDate);
+  if (floorId) params.set("floor_id", floorId);
+  return fetchJson<PresenceData>(`/api/v1/presence/today?${params.toString()}`);
+}
+
+// ── Waiting List ───────────────────────────────────────────────────────────────
+export interface WaitingListEntry {
+  id: string; desk_id: string; user_id: string; date: string;
+  notified: boolean; position: number;
+}
+export interface WaitingListList { items: { id: string; desk_id: string; date: string; notified: boolean }[]; total: number }
+export function joinWaitingList(body: { desk_id: string; date: string }, userId?: string) {
+  return fetchJson<WaitingListEntry>("/api/v1/waiting-list/", {
+    method: "POST", body: JSON.stringify(body), headers: userHeader(userId),
+  });
+}
+export function getMyWaitingList(userId?: string) {
+  return fetchJson<WaitingListList>("/api/v1/waiting-list/mine", { headers: userHeader(userId) });
+}
+export function leaveWaitingList(entryId: string, userId?: string) {
+  return fetchJson<void>(`/api/v1/waiting-list/${entryId}`, {
+    method: "DELETE", headers: userHeader(userId),
+  });
+}
+
+// ── Neighborhood booking ───────────────────────────────────────────────────────
+export function suggestNeighborhoodDesks(nearUserId: string, date: string) {
+  return fetchJson<DeskList>(`/api/v1/desks/neighborhood/suggest?near_user_id=${nearUserId}&date=${date}`);
+}
+
 // ── Auth ───────────────────────────────────────────────────────────────────────
 export interface AuthUser {
   id: string; org_id: string; email: string;

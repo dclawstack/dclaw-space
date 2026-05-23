@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react"
 import {
   getMyDeskBookings, getMyRoomBookings,
   checkInDesk, cancelDeskBooking, cancelRoomBooking,
+  deskBookingQrUrl, icalExportUrl,
 } from "@/lib/api"
 import type { DeskBooking, RoomBooking } from "@/lib/api"
 
@@ -27,6 +28,7 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true)
   const [upcomingOnly, setUpcomingOnly] = useState(true)
   const [actionId, setActionId] = useState<string | null>(null)
+  const [qrBookingId, setQrBookingId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   const load = useCallback(() => {
@@ -84,20 +86,39 @@ export default function BookingsPage() {
 
   return (
     <div className="p-8">
+      {/* QR Modal */}
+      {qrBookingId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setQrBookingId(null)}>
+          <div className="bg-white rounded-2xl p-8 shadow-xl max-w-xs w-full mx-4 text-center" onClick={e => e.stopPropagation()}>
+            <h3 className="text-sm font-semibold text-[#1A1A2E] mb-1">QR Check-In</h3>
+            <p className="text-xs text-[#8888A0] mb-4">Scan at the kiosk to check in</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={deskBookingQrUrl(qrBookingId)} alt="QR Code" className="w-48 h-48 mx-auto rounded-lg" />
+            <button onClick={() => setQrBookingId(null)} className="mt-5 text-xs text-[#8888A0] hover:text-[#1A1A2E]">Close</button>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-[#1A1A2E]">My Bookings</h1>
           <p className="text-sm text-[#8888A0] mt-1">Manage your desk and room reservations</p>
         </div>
-        <label className="flex items-center gap-2 text-sm text-[#3D3D4E]">
-          <input
-            type="checkbox"
-            checked={upcomingOnly}
-            onChange={(e) => setUpcomingOnly(e.target.checked)}
-            className="accent-[#7660A8]"
-          />
-          Upcoming only
-        </label>
+        <div className="flex items-center gap-3">
+          <a href={icalExportUrl()} target="_blank" rel="noreferrer"
+            className="px-4 py-2 rounded-full border border-[#EBEBF0] text-[#8888A0] text-xs hover:bg-[#F3F1F9] transition-colors">
+            Export iCal
+          </a>
+          <label className="flex items-center gap-2 text-sm text-[#3D3D4E]">
+            <input
+              type="checkbox"
+              checked={upcomingOnly}
+              onChange={(e) => setUpcomingOnly(e.target.checked)}
+              className="accent-[#7660A8]"
+            />
+            Upcoming only
+          </label>
+        </div>
       </div>
 
       {message && (
@@ -127,6 +148,11 @@ export default function BookingsPage() {
                       <StatusBadge status={b.status} />
                       {b.status === "confirmed" && (
                         <>
+                          <button onClick={() => setQrBookingId(b.id)}
+                            className="text-xs px-3 py-1 rounded-lg bg-[#F3F1F9] text-[#7660A8] hover:bg-[#EDE9F7] transition-colors"
+                            title="Show QR check-in code">
+                            QR
+                          </button>
                           <button onClick={() => handleCheckIn(b.id)} disabled={actionId === b.id}
                             className="text-xs px-3 py-1 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 disabled:opacity-50 transition-colors">
                             Check In

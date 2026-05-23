@@ -164,6 +164,43 @@ async def cancel_room_booking(
     await repo.cancel(booking)
 
 
+# ── QR Code ───────────────────────────────────────────────────────────────────
+
+@router.get("/desks/{booking_id}/qr")
+async def desk_booking_qr(
+    booking_id: uuid.UUID,
+    user_id: str = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Return a QR code PNG for mobile check-in."""
+    import io
+    import qrcode
+
+    repo = DeskBookingRepository(db)
+    booking = await repo.get_by_id(booking_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if booking.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not your booking")
+
+    # QR encodes a deep-link URL the mobile app / kiosk will open
+    checkin_url = f"/bookings/checkin/{booking_id}"
+    qr = qrcode.QRCode(box_size=8, border=2)
+    qr.add_data(checkin_url)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="#7660A8", back_color="white")
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    return Response(
+        content=buf.read(),
+        media_type="image/png",
+        headers={"Cache-Control": "max-age=3600"},
+    )
+
+
 # ── Analytics helper ──────────────────────────────────────────────────────────
 
 @router.get("/analytics/utilization")

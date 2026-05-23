@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/rooms", label: "Rooms" },
   { href: "/bookings", label: "My Bookings" },
   { href: "/floors", label: "Floor Plans" },
+  { href: "/presence", label: "Who's In" },
   { href: "/visitors", label: "Visitors" },
   { href: "/analytics", label: "Analytics" },
 ]

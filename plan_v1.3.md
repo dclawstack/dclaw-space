@@ -65,20 +65,20 @@
 
 | # | Feature | Files | Status |
 |---|---------|-------|--------|
-| 0.1 | `dclaw-manifest.json` | `frontend/public/dclaw-manifest.json` | [ ] |
-| 0.2 | Floor model + schema + repo + CRUD API | `models/floor.py`, `schemas/floor.py`, `repos/floor_repo.py`, `api/v1/floors.py` | [ ] |
-| 0.3 | Desk model + schema + repo + CRUD API | `models/desk.py`, `schemas/desk.py`, `repos/desk_repo.py`, `api/v1/desks.py` | [ ] |
-| 0.4 | Room model + schema + repo + CRUD API | `models/room.py`, `schemas/room.py`, `repos/room_repo.py`, `api/v1/rooms.py` | [ ] |
-| 0.5 | DeskBooking model + schema + repo + API | `models/desk_booking.py`, `api/v1/bookings.py` | [ ] |
-| 0.6 | RoomBooking model + schema + repo + API | `models/room_booking.py`, (same `api/v1/bookings.py`) | [ ] |
-| 0.7 | Wire all v1 routers in `api/main.py` | `api/main.py` | [ ] |
-| 0.8 | Alembic migration for all 5 tables | `alembic/versions/001_domain_models.py` | [ ] |
-| 0.9 | Frontend: updated `src/lib/api.ts` with all types/functions | `src/lib/api.ts` | [ ] |
-| 0.10 | Frontend: App layout with navigation | `src/app/layout.tsx` | [ ] |
-| 0.11 | Frontend: Dashboard page with live stats | `src/app/page.tsx` | [ ] |
-| 0.12 | Frontend: Desk browser + booking flow | `src/app/desks/page.tsx` | [ ] |
-| 0.13 | Frontend: Room browser + booking flow | `src/app/rooms/page.tsx` | [ ] |
-| 0.14 | Frontend: My Bookings page | `src/app/bookings/page.tsx` | [ ] |
+| 0.1 | `dclaw-manifest.json` | `frontend/public/dclaw-manifest.json` | ✅ |
+| 0.2 | Floor model + schema + repo + CRUD API | `models/floor.py`, `api/v1/floors.py` | ✅ |
+| 0.3 | Desk model + schema + repo + CRUD API | `models/desk.py`, `api/v1/desks.py` | ✅ |
+| 0.4 | Room model + schema + repo + CRUD API | `models/room.py`, `api/v1/rooms.py` | ✅ |
+| 0.5 | DeskBooking model + schema + repo + API | `models/desk_booking.py`, `api/v1/bookings.py` | ✅ |
+| 0.6 | RoomBooking model + schema + repo + API | `models/room_booking.py`, `api/v1/bookings.py` | ✅ |
+| 0.7 | Wire all v1 routers in `api/main.py` | `api/main.py` | ✅ |
+| 0.8 | Alembic migrations (001–004) | `alembic/versions/` | ✅ |
+| 0.9 | Frontend: `src/lib/api.ts` with all types/functions | `src/lib/api.ts` | ✅ |
+| 0.10 | Frontend: App layout with navigation + auth guard | `src/app/layout.tsx`, `AppShell.tsx` | ✅ |
+| 0.11 | Frontend: Dashboard page with live stats | `src/app/page.tsx` | ✅ |
+| 0.12 | Frontend: Desk browser + booking + waitlist + neighborhood | `src/app/desks/page.tsx` | ✅ |
+| 0.13 | Frontend: Room browser + booking flow | `src/app/rooms/page.tsx` | ✅ |
+| 0.14 | Frontend: My Bookings + QR + iCal export | `src/app/bookings/page.tsx` | ✅ |
 
 ### Complexity 1 — Core Differentiators
 
@@ -86,16 +86,23 @@
 
 | # | Feature | Files | Status |
 |---|---------|-------|--------|
-| 1.1 | Desk availability endpoint (date conflict detection) | `repos/desk_repo.py` extended, `api/v1/desks.py` | [ ] |
-| 1.2 | Room availability (time conflict + capacity + equipment filter) | `repos/room_repo.py` extended | [ ] |
-| 1.3 | Floor occupancy endpoint (`{desk_id: status}` map) | `api/v1/floors.py` | [ ] |
-| 1.4 | Desk check-in endpoint | `api/v1/bookings.py` | [ ] |
-| 1.5 | My bookings endpoint (filter by user_id) | `api/v1/bookings.py` | [ ] |
-| 1.6 | Frontend: Interactive floor plan (SVG + occupancy overlay) | `src/app/floors/[id]/page.tsx` | [ ] |
-| 1.7 | Frontend: Floor plan list page | `src/app/floors/page.tsx` | [ ] |
-| 1.8 | Basic utilization analytics endpoint | `api/v1/analytics.py` | [ ] |
-| 1.9 | Backend tests for all endpoints | `tests/test_floors.py`, `tests/test_desks.py`, `tests/test_rooms.py`, `tests/test_bookings.py` | [ ] |
-| 1.10 | Visitor management CRUD | `models/visitor.py`, `api/v1/visitors.py` | [ ] |
+| 1.1 | Desk availability (conflict detection) | `repos/desk_repo.py`, `api/v1/desks.py` | ✅ |
+| 1.2 | Room availability (time conflict + capacity) | `repos/room_repo.py`, `api/v1/rooms.py` | ✅ |
+| 1.3 | Floor occupancy endpoint | `api/v1/floors.py` | ✅ |
+| 1.4 | Desk check-in endpoint | `api/v1/bookings.py` | ✅ |
+| 1.5 | My bookings endpoint | `api/v1/bookings.py` | ✅ |
+| 1.6 | Frontend: Interactive floor plan (SVG + occupancy overlay + WebSocket live) | `src/app/floors/[id]/page.tsx` | ✅ |
+| 1.7 | Frontend: Floor plan list page | `src/app/floors/page.tsx` | ✅ |
+| 1.8 | Utilization analytics + predictions + ESG | `api/v1/analytics.py` | ✅ |
+| 1.9 | Backend tests — 36 passing | `tests/` | ✅ |
+| 1.10 | Visitor management CRUD | `models/visitor.py`, `api/v1/visitors.py` | ✅ |
+| 1.11 | Team Presence (who's in today) | `api/v1/presence.py`, `src/app/presence/page.tsx` | ✅ |
+| 1.12 | QR code check-in | `api/v1/bookings.py` (/qr endpoint) | ✅ |
+| 1.13 | Analytics CSV export | `api/v1/analytics.py` (/export/csv) | ✅ |
+| 1.14 | Waiting list for booked desks | `models/waiting_list.py`, `api/v1/waiting_list.py` | ✅ |
+| 1.15 | Neighborhood booking (sit near team) | `api/v1/desks.py` (/neighborhood/suggest) | ✅ |
+| 1.16 | Real-time WebSocket floor plan | `api/v1/websocket_floor.py` | ✅ |
+| 1.17 | Slack bot (/desk-book, /who-is-in) | `api/v1/slack_bot.py` | ✅ |
 
 ### Complexity 2 — Advanced AI + Workflows
 
@@ -103,13 +110,14 @@
 
 | # | Feature | Files | Status |
 |---|---------|-------|--------|
-| 2.1 | AI Space Copilot (streaming SSE, action-taking) | `services/copilot_service.py`, `api/v1/copilot.py`, `src/app/components/CopilotPanel.tsx` | [ ] |
-| 2.2 | Predictive attendance (ML attendance forecast) | `services/analytics_service.py` | [ ] |
-| 2.3 | iCal export for bookings | `api/v1/bookings.py` (ics endpoint) | [ ] |
-| 2.4 | Ghost meeting auto-cancellation (APScheduler job) | `services/scheduler_service.py` | [ ] |
-| 2.5 | ESG carbon dashboard | `api/v1/analytics.py` (esg endpoint), `src/app/analytics/esg/page.tsx` | [ ] |
-| 2.6 | Employee preference learning | `models/user_preference.py`, `services/preference_service.py` | [ ] |
-| 2.7 | Hybrid work scheduling AI | `api/v1/scheduling.py` | [ ] |
+| 2.1 | AI Space Copilot (streaming SSE, action-taking) | `services/copilot_service.py`, `api/v1/copilot.py`, `CopilotPanel.tsx` | ✅ |
+| 2.2 | Predictive attendance (ML attendance forecast) | `api/v1/analytics.py` (dow moving avg) | ✅ |
+| 2.3 | iCal export for bookings | `api/v1/bookings.py` (/export.ics) | ✅ |
+| 2.4 | Ghost meeting auto-cancellation (APScheduler) | `services/scheduler_service.py` | ✅ |
+| 2.5 | ESG carbon dashboard | `api/v1/analytics.py` (/esg) | ✅ |
+| 2.6 | Employee preference learning | `models/user_preference.py` | ✅ |
+| 2.7 | Hybrid work policy enforcement | — | ⬜ next sprint |
+| 2.8 | Sensor ingestion API | — | ⬜ next sprint |
 
 ---
 

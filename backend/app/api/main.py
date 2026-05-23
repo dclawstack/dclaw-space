@@ -5,7 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import init_db, AsyncSessionLocal
 from app.api.routes import health
-from app.api.v1 import floors, desks, rooms, bookings, visitors, analytics, copilot, auth, org
+from app.api.v1 import (
+    floors, desks, rooms, bookings, visitors, analytics, copilot, auth, org,
+    presence, waiting_list, slack_bot, websocket_floor,
+)
 from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
@@ -42,3 +45,7 @@ app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytic
 app.include_router(copilot.router, prefix="/api/v1/copilot", tags=["copilot"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(org.router, prefix="/api/v1/org", tags=["org"])
+app.include_router(presence.router, prefix="/api/v1/presence", tags=["presence"])
+app.include_router(waiting_list.router, prefix="/api/v1/waiting-list", tags=["waiting-list"])
+app.include_router(slack_bot.router, prefix="/api/v1/slack", tags=["slack"])
+app.include_router(websocket_floor.router, prefix="/api/v1", tags=["websocket"])

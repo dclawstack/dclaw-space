@@ -207,7 +207,7 @@ export default function SettingsPage() {
           {[
             {
               name: "Slack",
-              desc: "Book desks and rooms from Slack. Get visitor alerts via DM.",
+              desc: "Book desks (/desk-book) and see who's in (/who-is-in). POST to /api/v1/slack/commands",
               icon: "💬",
               connected: false,
             },
