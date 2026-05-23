@@ -8,24 +8,43 @@ export class ApiError extends Error {
   }
 }
 
+const FETCH_TIMEOUT_MS = 10_000;
+
 async function fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}${path}`;
-  const { headers: extraHeaders, ...restOptions } = options ?? {};
+  const { headers: extraHeaders, signal: callerSignal, ...restOptions } = options ?? {};
 
   // Auto-inject auth token if present (client-side only)
   const token = typeof window !== "undefined" ? localStorage.getItem("dclaw_token") : null;
   const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
 
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeader,
-      ...(extraHeaders as Record<string, string>),
-    },
-    ...restOptions,
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  if (callerSignal) {
+    callerSignal.addEventListener("abort", () => controller.abort());
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeader,
+        ...(extraHeaders as Record<string, string>),
+      },
+      signal: controller.signal,
+      ...restOptions,
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error("Request timed out. Please try again.");
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) {
-    if (res.status === 401 && typeof window !== "undefined") {
+    if (res.status === 401 && typeof window !== "undefined" && !path.startsWith("/auth/")) {
       localStorage.removeItem("dclaw_token");
       window.location.href = "/login";
       throw new Error("Session expired");
