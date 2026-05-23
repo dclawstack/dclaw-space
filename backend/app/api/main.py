@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,15 +10,21 @@ from app.api.v1 import (
     floors, desks, rooms, bookings, visitors, analytics, copilot, auth, org,
     presence, waiting_list, slack_bot, websocket_floor,
 )
-from app.services.scheduler_service import start_scheduler, stop_scheduler
+
+_IS_SERVERLESS = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+
+if not _IS_SERVERLESS:
+    from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    start_scheduler(AsyncSessionLocal)
+    if not _IS_SERVERLESS:
+        start_scheduler(AsyncSessionLocal)
     yield
-    stop_scheduler()
+    if not _IS_SERVERLESS:
+        stop_scheduler()
 
 
 app = FastAPI(
