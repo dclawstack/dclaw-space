@@ -58,9 +58,11 @@ export default function OnboardingPage() {
   const [step3Loading, setStep3Loading] = useState(false)
   const [step3Error, setStep3Error] = useState<string | null>(null)
 
-  // Step 4
+  // Step 4 — invite link uses current origin so it works locally and in prod
   const inviteCode = "dcl-" + Math.random().toString(36).slice(2, 8).toUpperCase()
-  const inviteLink = `https://space.dclawstack.com/join/${inviteCode}`
+  const inviteLink = typeof window !== "undefined"
+    ? `${window.location.origin}/join/${inviteCode}`
+    : `/join/${inviteCode}`
   const [copied, setCopied] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [inviteSent, setInviteSent] = useState(false)

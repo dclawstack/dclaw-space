@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext"
 import CopilotPanel from "@/components/CopilotPanel"
 
 const AUTH_ROUTES = ["/login", "/register"]
+const PUBLIC_PREFIXES = ["/join/", "/landing"]
 
 const navLinks = [
   { href: "/", label: "Dashboard" },
@@ -23,7 +24,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
 
-  const isAuthRoute = AUTH_ROUTES.includes(pathname)
+  const isAuthRoute = AUTH_ROUTES.includes(pathname) || PUBLIC_PREFIXES.some(p => pathname.startsWith(p))
 
   useEffect(() => {
     if (!loading && !user && !isAuthRoute) {
